@@ -1,4 +1,5 @@
 const restify = require('restify')
+const mongoose = require('mongoose')
 const chalk = require('chalk')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -26,6 +27,29 @@ server.use(morgan(`- >\
   ${chalk.green(':response-time[3]')}\
   ${chalk.magenta(':status')}\
 `))
+
+// process.on('exit', () => {
+//   console.log(chalk.red('Preparing to shut down'))
+//   server.close()
+//   process.exit(0)
+// })
+
+mongoose.connect(process.env.MONGODB_URL)
+
+const dbConnection = mongoose.connection
+
+dbConnection.on('open', (err) => {
+  if (err) throw err
+  console.log(chalk.green('> MongoDB Connected'))
+})
+
+dbConnection.on('error', (err) => {
+  if (err) throw err
+})
+
+server.on('close', () => {
+  dbConnection.close()
+})
 
 server.listen(process.env.PORT, (err) => {
   if (err) throw err
