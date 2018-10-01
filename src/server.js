@@ -2,7 +2,6 @@ const restify = require('restify')
 const chalk = require('chalk')
 const helmet = require('helmet')
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
 
 const server = restify.createServer()
 
@@ -13,7 +12,11 @@ server.use(helmet.xssFilter())
 server.use(helmet.frameguard({
   action: 'deny'
 }))
-server.use(bodyParser.json())
+
+// Restify plugins
+server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.gzipResponse())
+server.use(restify.plugins.queryParser({ mapParams: false }))
 
 server.use(morgan(`- >\
   ${chalk.blue(':date[web]')}\
