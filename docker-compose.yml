@@ -1,0 +1,27 @@
+version: '3'
+networks:
+  jecrcnet:
+services:
+  api:
+    image: node:10
+    networks:
+      - jecrcnet
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./:/api
+    links:
+      - mongo
+    command : ["bash"]
+    working_dir : /api
+    tty: true
+    stdin_open: true
+    logging :
+      driver : "none"
+
+  mongo:
+    image: mongo:latest
+    networks:
+      - jecrcnet
+    ports:
+      - 27018:27018
