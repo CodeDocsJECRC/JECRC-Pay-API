@@ -7,7 +7,7 @@ services:
     networks:
       - jecrcnet
     ports:
-      - "7000:7000"
+      - "7777:7000"
     volumes:
       - ./:/api
     links:
